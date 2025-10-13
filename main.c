@@ -1,50 +1,22 @@
-#include <math.h>
-#include <stdlib.h>
-#include <stdio.h>
-#include <string.h> // para strdup()
-#include "mlx.h"
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   main.c                                             :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: diogribe <diogribe@student.42porto.com>    +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2025/10/13 18:41:19 by diogribe          #+#    #+#             */
+/*   Updated: 2025/10/13 19:07:05 by diogribe         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
 
-#define WIDTH 800
-#define HEIGHT 600
+#include "cub3D.h"
+
+//Comand to Run:
+//cc main.c draw.c -lmlx -lXext -lX11 -lm -o raycaster
+
 #define MOVE_SPEED 0.01
 #define ROT_SPEED 0.01
-
-typedef struct s_texture
-{
-	void	*img;
-	char	*addr;
-	int		bpp;
-	int		line_length;
-	int		endian;
-	int		width;
-	int		height;
-}	t_texture;
-
-typedef struct s_game
-{
-	void		*mlx;
-	void		*win;
-	void		*img;
-	char		*addr;
-	int			bpp;
-	int			line_length;
-	int			endian;
-
-	char		**map;
-	int			mapWidth;
-	int			mapHeight;
-
-	double		posX, posY;
-	double		dirX, dirY;
-	double		planeX, planeY;
-
-	int			key_w;
-	int			key_a;
-	int			key_s;
-	int			key_d;
-
-	t_texture	textures[4];
-}	t_game;
 
 static char *g_map[] = {
 	"111111",
@@ -96,162 +68,6 @@ void	create_textures(t_game *g)
 }
 
 // -----------------------------------------------------
-// PIXEL
-// -----------------------------------------------------
-void my_mlx_pixel_put(t_game *game, int x, int y, int color)
-{
-	if (x < 0 || x >= WIDTH || y < 0 || y >= HEIGHT)
-		return;
-	char *dst = game->addr + (y * game->line_length + x * (game->bpp / 8));
-	*(unsigned int*)dst = color;
-}
-
-// -----------------------------------------------------
-// DESENHAR COLUNA
-// -----------------------------------------------------
-void draw_vertical_line(t_game *game, int x, int start, int end, int color)
-{
-	if (start < 0) start = 0;
-	if (end >= HEIGHT) end = HEIGHT - 1;
-	for (int y = start; y <= end; y++)
-		my_mlx_pixel_put(game, x, y, color);
-}
-
-// -----------------------------------------------------
-// RAYCASTING PRINCIPAL
-// -----------------------------------------------------
-void draw_frame(t_game *g)
-{
-	// limpa imagem (céu + chão)
-	for (int y = 0; y < HEIGHT; y++)
-	{
-		int color = (y < HEIGHT / 2) ? 0x87CEEB : 0x444444;
-		for (int x = 0; x < WIDTH; x++)
-			my_mlx_pixel_put(g, x, y, color);
-	}
-
-	for (int x = 0; x < WIDTH; x++)
-	{
-		double cameraX = 2 * x / (double)WIDTH - 1;
-		double rayDirX = g->dirX + g->planeX * cameraX;
-		double rayDirY = g->dirY + g->planeY * cameraX;
-
-		int mapX = (int)g->posX;
-		int mapY = (int)g->posY;
-
-		double deltaDistX = fabs(1 / rayDirX);
-		double deltaDistY = fabs(1 / rayDirY);
-
-		double sideDistX;
-		double sideDistY;
-		int stepX, stepY;
-
-		if (rayDirX < 0)
-		{
-			stepX = -1;
-			sideDistX = (g->posX - mapX) * deltaDistX;
-		}
-		else
-		{
-			stepX = 1;
-			sideDistX = (mapX + 1.0 - g->posX) * deltaDistX;
-		}
-		if (rayDirY < 0)
-		{
-			stepY = -1;
-			sideDistY = (g->posY - mapY) * deltaDistY;
-		}
-		else
-		{
-			stepY = 1;
-			sideDistY = (mapY + 1.0 - g->posY) * deltaDistY;
-		}
-
-		int hit = 0;
-		int side;
-		while (hit == 0)
-		{
-			if (sideDistX < sideDistY)
-			{
-				sideDistX += deltaDistX;
-				mapX += stepX;
-				side = 0;
-			}
-			else
-			{
-				sideDistY += deltaDistY;
-				mapY += stepY;
-				side = 1;
-			}
-			if (g->map[mapY][mapX] == '1')
-				hit = 1;
-		}
-
-		double perpWallDist = (side == 0)
-			? (mapX - g->posX + (1 - stepX) / 2) / rayDirX
-			: (mapY - g->posY + (1 - stepY) / 2) / rayDirY;
-
-		int lineHeight = (int)(HEIGHT / perpWallDist);
-		int drawStart = -lineHeight / 2 + HEIGHT / 2;
-		int drawEnd = lineHeight / 2 + HEIGHT / 2;
-
-		int texNum = 0;
-		if (side == 0 && rayDirX > 0)
-			texNum = 0;
-		else if (side == 0 && rayDirX < 0)
-			texNum = 1;
-		else if (side == 1 && rayDirY > 0)
-			texNum = 2;
-		else if (side == 1 && rayDirY < 0)
-			texNum = 3;
-
-		double wallX;
-		if (side == 0)
-			wallX = g->posY + perpWallDist * rayDirY;
-		else
-			wallX = g->posX + perpWallDist * rayDirX;
-		wallX -= floor(wallX);
-
-		int texX = (int)(wallX * (double)g->textures[texNum].width);
-		if ((side == 0 && rayDirX > 0) || (side == 1 && rayDirY < 0))
-			texX = g->textures[texNum].width - texX - 1;
-		if (texX < 0)
-			texX = 0;
-		if (texX >= g->textures[texNum].width)
-			texX = g->textures[texNum].width - 1;
-
-		double step = 1.0 * g->textures[texNum].height / lineHeight;
-		double texPos = (drawStart - HEIGHT / 2 + lineHeight / 2) * step;
-
-		if (drawStart < 0)
-		{
-			texPos += step * (-drawStart);
-			drawStart = 0;
-		}
-		if (drawEnd >= HEIGHT)
-			drawEnd = HEIGHT - 1;
-
-		t_texture *tex = &g->textures[texNum];
-		int tex_bpp_div = tex->bpp / 8;
-
-		for (int y = drawStart; y <= drawEnd; y++)
-		{
-			int texY = (int)texPos;
-			if (texY >= tex->height)
-				texY = tex->height - 1;
-			else if (texY < 0)
-				texY = 0;
-			int color = *(unsigned int *)(tex->addr
-				+ (texY * tex->line_length + texX * tex_bpp_div));
-			my_mlx_pixel_put(g, x, y, color);
-			texPos += step;
-		}
-	}
-
-	mlx_put_image_to_window(g->mlx, g->win, g->img, 0, 0);
-}
-
-// -----------------------------------------------------
 // POSIÇÃO DO PLAYER
 // -----------------------------------------------------
 void find_player_start(t_game *g)
@@ -295,42 +111,63 @@ void find_player_start(t_game *g)
 }
 
 // -----------------------------------------------------
-// MOVIMENTO
+// MOVIMENTO - TRANSLAÇÃO
 // -----------------------------------------------------
-void update_movement(t_game *g)
+void	handle_player_move(t_game *g)
 {
+	double	new_x;
+	double	new_y;
+
 	if (g->key_w)
 	{
-		if (g->map[(int)(g->posY)][(int)(g->posX + g->dirX * MOVE_SPEED)] == '0')
-			g->posX += g->dirX * MOVE_SPEED;
-		if (g->map[(int)(g->posY + g->dirY * MOVE_SPEED)][(int)(g->posX)] == '0')
-			g->posY += g->dirY * MOVE_SPEED;
+		new_x = g->posX + g->dirX * MOVE_SPEED;
+		new_y = g->posY + g->dirY * MOVE_SPEED;
+		if (g->map[(int)g->posY][(int)new_x] == '0')
+			g->posX = new_x;
+		if (g->map[(int)new_y][(int)g->posX] == '0')
+			g->posY = new_y;
 	}
 	if (g->key_s)
 	{
-		if (g->map[(int)(g->posY)][(int)(g->posX - g->dirX * MOVE_SPEED)] == '0')
-			g->posX -= g->dirX * MOVE_SPEED;
-		if (g->map[(int)(g->posY - g->dirY * MOVE_SPEED)][(int)(g->posX)] == '0')
-			g->posY -= g->dirY * MOVE_SPEED;
+		new_x = g->posX - g->dirX * MOVE_SPEED;
+		new_y = g->posY - g->dirY * MOVE_SPEED;
+		if (g->map[(int)g->posY][(int)new_x] == '0')
+			g->posX = new_x;
+		if (g->map[(int)new_y][(int)g->posX] == '0')
+			g->posY = new_y;
 	}
+}
+
+// -----------------------------------------------------
+// MOVIMENTO - ROTAÇÃO
+// -----------------------------------------------------
+void	handle_player_rotate(t_game *g)
+{
+	double	old_dir_x;
+	double	old_plane_x;
+	double	angle;
+
 	if (g->key_a)
-	{
-		double oldDirX = g->dirX;
-		g->dirX = g->dirX * cos(-ROT_SPEED) - g->dirY * sin(-ROT_SPEED);
-		g->dirY = oldDirX * sin(-ROT_SPEED) + g->dirY * cos(-ROT_SPEED);
-		double oldPlaneX = g->planeX;
-		g->planeX = g->planeX * cos(-ROT_SPEED) - g->planeY * sin(-ROT_SPEED);
-		g->planeY = oldPlaneX * sin(-ROT_SPEED) + g->planeY * cos(-ROT_SPEED);
-	}
-	if (g->key_d)
-	{
-		double oldDirX = g->dirX;
-		g->dirX = g->dirX * cos(ROT_SPEED) - g->dirY * sin(ROT_SPEED);
-		g->dirY = oldDirX * sin(ROT_SPEED) + g->dirY * cos(ROT_SPEED);
-		double oldPlaneX = g->planeX;
-		g->planeX = g->planeX * cos(ROT_SPEED) - g->planeY * sin(ROT_SPEED);
-		g->planeY = oldPlaneX * sin(ROT_SPEED) + g->planeY * cos(ROT_SPEED);
-	}
+		angle = -ROT_SPEED;
+	else if (g->key_d)
+		angle = ROT_SPEED;
+	else
+		return ;
+	old_dir_x = g->dirX;
+	g->dirX = g->dirX * cos(angle) - g->dirY * sin(angle);
+	g->dirY = old_dir_x * sin(angle) + g->dirY * cos(angle);
+	old_plane_x = g->planeX;
+	g->planeX = g->planeX * cos(angle) - g->planeY * sin(angle);
+	g->planeY = old_plane_x * sin(angle) + g->planeY * cos(angle);
+}
+
+// -----------------------------------------------------
+// MOVIMENTO - PRINCIPAL
+// -----------------------------------------------------
+void	update_movement(t_game *g)
+{
+	handle_player_move(g);
+	handle_player_rotate(g);
 }
 
 // -----------------------------------------------------
@@ -352,6 +189,16 @@ int key_release(int key, t_game *g)
 	if (key == 115) g->key_s = 0;
 	if (key == 97)  g->key_a = 0;
 	if (key == 100) g->key_d = 0;
+	return (0);
+}
+
+// -----------------------------------------------------
+// FECHAR JANELA (X)
+// -----------------------------------------------------
+int close_window(t_game *g)
+{
+	(void)g;
+	exit(0);
 	return (0);
 }
 
@@ -385,6 +232,7 @@ int main(void)
 
 	mlx_hook(g.win, 2, 1L<<0, key_press, &g);	 // KeyPress
 	mlx_hook(g.win, 3, 1L<<1, key_release, &g);   // KeyRelease
+	mlx_hook(g.win, 17, 0, close_window, &g);	 // DestroyNotify (X button)
 	mlx_loop_hook(g.mlx, loop_hook, &g);		  // Frame update
 
 	mlx_loop(g.mlx);
