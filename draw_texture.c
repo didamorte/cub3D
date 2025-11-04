@@ -6,7 +6,7 @@
 /*   By: diogribe <diogribe@student.42porto.com>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/04 20:45:00 by diogribe          #+#    #+#             */
-/*   Updated: 2025/11/04 21:54:36 by diogribe         ###   ########.fr       */
+/*   Updated: 2025/11/04 22:51:09 by diogribe         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,42 +17,42 @@
 // -----------------------------------------------------
 int	select_texture(int side, double rayDirX, double rayDirY)
 {
-	int	texNum;
+	int	tex_num;
 
-	texNum = 0;
+	tex_num = 0;
 	if (side == 0 && rayDirX > 0)
-		texNum = 1;
+		tex_num = 1;
 	else if (side == 0 && rayDirX < 0)
-		texNum = 0;
+		tex_num = 0;
 	else if (side == 1 && rayDirY > 0)
-		texNum = 3;
+		tex_num = 3;
 	else if (side == 1 && rayDirY < 0)
-		texNum = 2;
-	return (texNum);
+		tex_num = 2;
+	return (tex_num);
 }
 
 // -----------------------------------------------------
 // CALCULAR COORDENADA X DA TEXTURA
 // -----------------------------------------------------
-int	calculate_tex_x(t_game *g, int side, double perpWallDist,
-	double rayDirX, double rayDirY, int texNum)
+int	calculate_tex_x(t_game *g, t_ray *ray, int tex_num)
 {
-	double	wallX;
-	int		texX;
+	double	wall_x;
+	int		tex_x;
 
-	if (side == 0)
-		wallX = g->posY + perpWallDist * rayDirY;
+	if (ray->side == 0)
+		wall_x = g->posY + ray->perp_wall_dist * ray->dir_y;
 	else
-		wallX = g->posX + perpWallDist * rayDirX;
-	wallX -= floor(wallX);
-	texX = (int)(wallX * (double)g->textures[texNum].width);
-	if ((side == 0 && rayDirX < 0) || (side == 1 && rayDirY > 0))
-		texX = g->textures[texNum].width - texX - 1;
-	if (texX < 0)
-		texX = 0;
-	if (texX >= g->textures[texNum].width)
-		texX = g->textures[texNum].width - 1;
-	return (texX);
+		wall_x = g->posX + ray->perp_wall_dist * ray->dir_x;
+	wall_x -= floor(wall_x);
+	tex_x = (int)(wall_x * (double)g->textures[tex_num].width);
+	if ((ray->side == 0 && ray->dir_x < 0)
+		|| (ray->side == 1 && ray->dir_y > 0))
+		tex_x = g->textures[tex_num].width - tex_x - 1;
+	if (tex_x < 0)
+		tex_x = 0;
+	if (tex_x >= g->textures[tex_num].width)
+		tex_x = g->textures[tex_num].width - 1;
+	return (tex_x);
 }
 
 // -----------------------------------------------------
@@ -94,6 +94,5 @@ void	calc_wall(t_game *g, t_ray *ray, t_wall *wall)
 	wall->draw_start = -wall->line_height / 2 + HEIGHT / 2;
 	wall->draw_end = wall->line_height / 2 + HEIGHT / 2;
 	wall->tex_num = select_texture(ray->side, ray->dir_x, ray->dir_y);
-	wall->tex_x = calculate_tex_x(g, ray->side, ray->perp_wall_dist,
-			ray->dir_x, ray->dir_y, wall->tex_num);
+	wall->tex_x = calculate_tex_x(g, ray, wall->tex_num);
 }

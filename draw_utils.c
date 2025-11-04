@@ -6,7 +6,7 @@
 /*   By: diogribe <diogribe@student.42porto.com>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/04 20:45:00 by diogribe          #+#    #+#             */
-/*   Updated: 2025/11/04 21:54:35 by diogribe         ###   ########.fr       */
+/*   Updated: 2025/11/04 22:54:10 by diogribe         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,22 +26,13 @@ void	my_mlx_pixel_put(t_game *game, int x, int y, int color)
 }
 
 // -----------------------------------------------------
-// DESENHAR COLUNA
+// OBTER COR PARA LINHA
 // -----------------------------------------------------
-void	draw_vertical_line(t_game *game, int x, int start, int end, int color)
+static int	get_line_color(int y)
 {
-	int	y;
-
-	if (start < 0)
-		start = 0;
-	if (end >= HEIGHT)
-		end = HEIGHT - 1;
-	y = start;
-	while (y <= end)
-	{
-		my_mlx_pixel_put(game, x, y, color);
-		y++;
-	}
+	if (y < HEIGHT / 2)
+		return (0x87CEEB);
+	return (0x444444);
 }
 
 // -----------------------------------------------------
@@ -56,7 +47,7 @@ void	clear_screen(t_game *g)
 	y = 0;
 	while (y < HEIGHT)
 	{
-		color = (y < HEIGHT / 2) ? 0x87CEEB : 0x444444;
+		color = get_line_color(y);
 		x = 0;
 		while (x < WIDTH)
 		{

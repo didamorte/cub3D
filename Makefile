@@ -9,7 +9,7 @@ MLX_DIR		:= minilibx-linux
 
 # Source Files
 
-SRCS := main.c draw.c draw_utils.c draw_texture.c
+SRCS := main.c launcher.c draw.c draw_utils.c draw_texture.c player.c input.c
 
 OBJS := $(SRCS:.c=.o)
 
