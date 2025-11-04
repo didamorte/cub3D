@@ -1,36 +1,36 @@
-NAME	:= minishell
+NAME	:= cub3D
 CC		:= cc
 FLAGS	:= -Wall -Wextra -Werror -g
-LIBS	:= -lreadline
+LIBS	:= -lmlx -lXext -lX11 -lm
 
 # Library Paths - No Spaces Around '='
 LIBFT_DIR	:= libft
+MLX_DIR		:= minilibx-linux
 
 # Source Files
 
-SRCS := buildins.c buildins2.c buildins_utils.c buildins_utils2.c \
-        buildins_utils3.c buildins_utils4.c cleanups.c error.c \
-        input.c input_utils.c input_utils2.c input_utils3.c \
-        input_utils4.c input_utils5.c minishell.c minishell_utils.c \
-        pipex.c pipex_utils.c pipex_utils2.c pipex_utils3.c \
-        quotes_utils.c quotes_utils2.c buildins_utils5.c buildins_utils6.c
+SRCS := main.c draw.c draw_utils.c draw_texture.c
 
 OBJS := $(SRCS:.c=.o)
 
 # Explicit Library Paths
 LIBFT_A		:= $(LIBFT_DIR)/libft.a
+MLX_A		:= $(MLX_DIR)/libmlx.a
 
 # Main Target
 all: $(NAME)
 
 # Executable Creation
-$(NAME): $(OBJS) $(LIBFT_A)
+$(NAME): $(OBJS) $(LIBFT_A) $(MLX_A)
 	@echo "Compiling $(NAME)..."
-	$(CC) $(FLAGS) -o $@ $^ $(LIBFT_A) $(LIBS)
+	$(CC) $(FLAGS) -o $@ $(OBJS) $(LIBFT_A) $(MLX_A) $(LIBS)
 
 # Library Compilation
 $(LIBFT_A):
 	$(MAKE) -C $(LIBFT_DIR)
+
+$(MLX_A):
+	$(MAKE) -C $(MLX_DIR)
 
 # Compilation Rule
 %.o: %.c
@@ -39,6 +39,7 @@ $(LIBFT_A):
 # Cleaning Rules
 clean:
 	$(MAKE) -C $(LIBFT_DIR) clean
+	$(MAKE) -C $(MLX_DIR) clean
 	rm -f $(OBJS)
 
 fclean: clean
