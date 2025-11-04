@@ -6,7 +6,7 @@
 /*   By: diogribe <diogribe@student.42porto.com>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/10/13 18:41:19 by diogribe          #+#    #+#             */
-/*   Updated: 2025/10/13 19:07:05 by diogribe         ###   ########.fr       */
+/*   Updated: 2025/11/04 20:03:45 by diogribe         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -70,41 +70,58 @@ void	create_textures(t_game *g)
 // -----------------------------------------------------
 // POSIÇÃO DO PLAYER
 // -----------------------------------------------------
+void	set_player_direction(t_game *g, char c)
+{
+	g->dirX = 0;
+	g->dirY = 0;
+	g->planeX = 0;
+	g->planeY = 0;
+	if (c == 'N')
+	{
+		g->dirY = -1;
+		g->planeX = 0.66;
+	}
+	else if (c == 'S')
+	{
+		g->dirY = 1;
+		g->planeX = -0.66;
+	}
+	else if (c == 'E')
+	{
+		g->dirX = 1;
+		g->planeY = 0.66;
+	}
+	else if (c == 'W')
+	{
+		g->dirX = -1;
+		g->planeY = -0.66;
+	}
+}
+
 void find_player_start(t_game *g)
 {
-	for (int y = 0; g->map[y]; y++)
+	int		y;
+	int		x;
+	char	c;
+
+	y = 0;
+	while (g->map[y])
 	{
-		for (int x = 0; g->map[y][x]; x++)
+		x = 0;
+		while (g->map[y][x])
 		{
-			char c = g->map[y][x];
+			c = g->map[y][x];
 			if (c == 'N' || c == 'S' || c == 'E' || c == 'W')
 			{
 				g->posX = x + 0.5;
 				g->posY = y + 0.5;
-				if (c == 'N')
-				{
-					g->dirX = 0; g->dirY = -1;
-					g->planeX = 0.66; g->planeY = 0;
-				}
-				if (c == 'S')
-				{
-					g->dirX = 0; g->dirY = 1;
-					g->planeX = -0.66; g->planeY = 0;
-				}
-				if (c == 'E')
-				{
-					g->dirX = 1; g->dirY = 0;
-					g->planeX = 0; g->planeY = 0.66;
-				}
-				if (c == 'W')
-				{
-					g->dirX = -1; g->dirY = 0;
-					g->planeX = 0; g->planeY = -0.66;
-				}
-				g->map[y][x] = '0'; // substitui o N/S/E/W por chão
+				set_player_direction(g, c);
+				g->map[y][x] = '0';
 				return;
 			}
+			x++;
 		}
+		y++;
 	}
 	fprintf(stderr, "Erro: posição inicial do jogador não encontrada!\n");
 	exit(1);
@@ -175,20 +192,29 @@ void	update_movement(t_game *g)
 // -----------------------------------------------------
 int key_press(int key, t_game *g)
 {
-	if (key == 65307) exit(0);
-	if (key == 119) g->key_w = 1; // W
-	if (key == 115) g->key_s = 1; // S
-	if (key == 97)  g->key_a = 1; // A
-	if (key == 100) g->key_d = 1; // D
+	if (key == 65307)
+		exit(0);
+	if (key == 119)
+		g->key_w = 1;
+	if (key == 115)
+		g->key_s = 1;
+	if (key == 97)
+		g->key_a = 1;
+	if (key == 100)
+		g->key_d = 1;
 	return (0);
 }
 
 int key_release(int key, t_game *g)
 {
-	if (key == 119) g->key_w = 0;
-	if (key == 115) g->key_s = 0;
-	if (key == 97)  g->key_a = 0;
-	if (key == 100) g->key_d = 0;
+	if (key == 119)
+		g->key_w = 0;
+	if (key == 115)
+		g->key_s = 0;
+	if (key == 97)
+		g->key_a = 0;
+	if (key == 100)
+		g->key_d = 0;
 	return (0);
 }
 

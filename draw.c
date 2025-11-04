@@ -6,286 +6,102 @@
 /*   By: diogribe <diogribe@student.42porto.com>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/10/13 18:41:13 by diogribe          #+#    #+#             */
-/*   Updated: 2025/10/13 19:04:24 by diogribe         ###   ########.fr       */
+/*   Updated: 2025/11/04 21:54:28 by diogribe         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "cub3D.h"
 
 // -----------------------------------------------------
-// PIXEL
+// INICIALIZAR RAY STRUCT
 // -----------------------------------------------------
-void	my_mlx_pixel_put(t_game *game, int x, int y, int color)
+void	init_ray_struct(t_game *g, int x, t_ray *ray)
 {
-	char	*dst;
+	double	camera_x;
 
-	if (x < 0 || x >= WIDTH || y < 0 || y >= HEIGHT)
-		return ;
-	dst = game->addr + (y * game->line_length + x * (game->bpp / 8));
-	*(unsigned int *)dst = color;
+	camera_x = 2 * x / (double)WIDTH - 1;
+	ray->dir_x = g->dirX + g->planeX * camera_x;
+	ray->dir_y = g->dirY + g->planeY * camera_x;
+	ray->map_x = (int)g->posX;
+	ray->map_y = (int)g->posY;
 }
 
 // -----------------------------------------------------
-// DESENHAR COLUNA
+// CALCULAR STEP E SIDE DIST PARA RAY
 // -----------------------------------------------------
-void	draw_vertical_line(t_game *game, int x, int start, int end, int color)
+void	calc_ray_step(t_game *g, t_ray *ray)
 {
-	int	y;
+	double	delta_x;
+	double	delta_y;
 
-	if (start < 0)
-		start = 0;
-	if (end >= HEIGHT)
-		end = HEIGHT - 1;
-	y = start;
-	while (y <= end)
+	delta_x = fabs(1 / ray->dir_x);
+	delta_y = fabs(1 / ray->dir_y);
+	if (ray->dir_x < 0)
 	{
-		my_mlx_pixel_put(game, x, y, color);
-		y++;
-	}
-}
-
-// -----------------------------------------------------
-// LIMPAR TELA (CÉU + CHÃO)
-// -----------------------------------------------------
-static void	clear_screen(t_game *g)
-{
-	int	x;
-	int	y;
-	int	color;
-
-	y = 0;
-	while (y < HEIGHT)
-	{
-		color = (y < HEIGHT / 2) ? 0x87CEEB : 0x444444;
-		x = 0;
-		while (x < WIDTH)
-		{
-			my_mlx_pixel_put(g, x, y, color);
-			x++;
-		}
-		y++;
-	}
-}
-
-// -----------------------------------------------------
-// INICIALIZAR RAY
-// -----------------------------------------------------
-static void	init_ray(t_game *g, int x, double *rayDirX, double *rayDirY,
-	int *mapX, int *mapY)
-{
-	double	cameraX;
-
-	cameraX = 2 * x / (double)WIDTH - 1;
-	*rayDirX = g->dirX + g->planeX * cameraX;
-	*rayDirY = g->dirY + g->planeY * cameraX;
-	*mapX = (int)g->posX;
-	*mapY = (int)g->posY;
-}
-
-// -----------------------------------------------------
-// CALCULAR STEP E SIDE DIST
-// -----------------------------------------------------
-static void	calculate_step_and_sidedist(t_game *g, double rayDirX,
-	double rayDirY, int *stepX, int *stepY, double *sideDistX,
-	double *sideDistY, int mapX, int mapY)
-{
-	double	deltaDistX;
-	double	deltaDistY;
-
-	deltaDistX = fabs(1 / rayDirX);
-	deltaDistY = fabs(1 / rayDirY);
-	if (rayDirX < 0)
-	{
-		*stepX = -1;
-		*sideDistX = (g->posX - mapX) * deltaDistX;
+		ray->step_x = -1;
+		ray->side_dist_x = (g->posX - ray->map_x) * delta_x;
 	}
 	else
 	{
-		*stepX = 1;
-		*sideDistX = (mapX + 1.0 - g->posX) * deltaDistX;
+		ray->step_x = 1;
+		ray->side_dist_x = (ray->map_x + 1.0 - g->posX) * delta_x;
 	}
-	if (rayDirY < 0)
+	if (ray->dir_y < 0)
 	{
-		*stepY = -1;
-		*sideDistY = (g->posY - mapY) * deltaDistY;
+		ray->step_y = -1;
+		ray->side_dist_y = (g->posY - ray->map_y) * delta_y;
 	}
 	else
 	{
-		*stepY = 1;
-		*sideDistY = (mapY + 1.0 - g->posY) * deltaDistY;
+		ray->step_y = 1;
+		ray->side_dist_y = (ray->map_y + 1.0 - g->posY) * delta_y;
 	}
 }
 
 // -----------------------------------------------------
-// ALGORITMO DDA - ENCONTRAR PAREDE
+// DDA COM RAY STRUCT
 // -----------------------------------------------------
-static void	perform_dda(t_game *g, int *mapX, int *mapY, double *sideDistX,
-	double *sideDistY, int stepX, int stepY, int *side, double rayDirX,
-	double rayDirY)
+void	perform_dda_ray(t_game *g, t_ray *ray)
 {
 	int		hit;
-	double	deltaDistX;
-	double	deltaDistY;
+	double	delta_x;
+	double	delta_y;
 
 	hit = 0;
-	deltaDistX = fabs(1 / rayDirX);
-	deltaDistY = fabs(1 / rayDirY);
+	delta_x = fabs(1 / ray->dir_x);
+	delta_y = fabs(1 / ray->dir_y);
 	while (hit == 0)
 	{
-		if (*sideDistX < *sideDistY)
+		if (ray->side_dist_x < ray->side_dist_y)
 		{
-			*sideDistX += deltaDistX;
-			*mapX += stepX;
-			*side = 0;
+			ray->side_dist_x += delta_x;
+			ray->map_x += ray->step_x;
+			ray->side = 0;
 		}
 		else
 		{
-			*sideDistY += deltaDistY;
-			*mapY += stepY;
-			*side = 1;
+			ray->side_dist_y += delta_y;
+			ray->map_y += ray->step_y;
+			ray->side = 1;
 		}
-		if (g->map[*mapY][*mapX] == '1')
+		if (g->map[ray->map_y][ray->map_x] == '1')
 			hit = 1;
-	}
-}
-
-// -----------------------------------------------------
-// CALCULAR DISTÂNCIA E ALTURA DA PAREDE
-// -----------------------------------------------------
-static void	calculate_wall_height(t_game *g, int mapX, int mapY, int side,
-	double rayDirX, double rayDirY, int stepX, int stepY,
-	int *lineHeight, int *drawStart, int *drawEnd)
-{
-	double	perpWallDist;
-
-	if (side == 0)
-		perpWallDist = (mapX - g->posX + (1 - stepX) / 2) / rayDirX;
-	else
-		perpWallDist = (mapY - g->posY + (1 - stepY) / 2) / rayDirY;
-	*lineHeight = (int)(HEIGHT / perpWallDist);
-	*drawStart = -*lineHeight / 2 + HEIGHT / 2;
-	*drawEnd = *lineHeight / 2 + HEIGHT / 2;
-}
-
-// -----------------------------------------------------
-// ESCOLHER TEXTURA
-// -----------------------------------------------------
-static int	select_texture(int side, double rayDirX, double rayDirY)
-{
-	int	texNum;
-
-	texNum = 0;
-	if (side == 0 && rayDirX > 0)
-		texNum = 1;  // Raio vai Este → parede virada Oeste
-	else if (side == 0 && rayDirX < 0)
-		texNum = 0;  // Raio vai Oeste → parede virada Este
-	else if (side == 1 && rayDirY > 0)
-		texNum = 3;  // Raio vai Sul → parede virada Norte
-	else if (side == 1 && rayDirY < 0)
-		texNum = 2;  // Raio vai Norte → parede virada Sul
-	return (texNum);
-}
-
-// -----------------------------------------------------
-// CALCULAR COORDENADA X DA TEXTURA
-// -----------------------------------------------------
-static int	calculate_tex_x(t_game *g, int side, double perpWallDist,
-	double rayDirX, double rayDirY, int texNum)
-{
-	double	wallX;
-	int		texX;
-
-	if (side == 0)
-		wallX = g->posY + perpWallDist * rayDirY;
-	else
-		wallX = g->posX + perpWallDist * rayDirX;
-	wallX -= floor(wallX);
-	texX = (int)(wallX * (double)g->textures[texNum].width);
-	if ((side == 0 && rayDirX < 0) || (side == 1 && rayDirY > 0))
-		texX = g->textures[texNum].width - texX - 1;
-	if (texX < 0)
-		texX = 0;
-	if (texX >= g->textures[texNum].width)
-		texX = g->textures[texNum].width - 1;
-	return (texX);
-}
-
-// -----------------------------------------------------
-// DESENHAR COLUNA TEXTURIZADA
-// -----------------------------------------------------
-static void	draw_textured_column(t_game *g, int x, int drawStart, int drawEnd,
-	int lineHeight, int texNum, int texX)
-{
-	t_texture	*tex;
-	int			tex_bpp_div;
-	double		step;
-	double		texPos;
-	int			y;
-	int			texY;
-	int			color;
-
-	step = 1.0 * g->textures[texNum].height / lineHeight;
-	texPos = (drawStart - HEIGHT / 2 + lineHeight / 2) * step;
-	if (drawStart < 0)
-	{
-		texPos += step * (-drawStart);
-		drawStart = 0;
-	}
-	if (drawEnd >= HEIGHT)
-		drawEnd = HEIGHT - 1;
-	tex = &g->textures[texNum];
-	tex_bpp_div = tex->bpp / 8;
-	y = drawStart;
-	while (y <= drawEnd)
-	{
-		texY = (int)texPos;
-		if (texY >= tex->height)
-			texY = tex->height - 1;
-		else if (texY < 0)
-			texY = 0;
-		color = *(unsigned int *)(tex->addr
-				+ (texY * tex->line_length + texX * tex_bpp_div));
-		my_mlx_pixel_put(g, x, y, color);
-		texPos += step;
-		y++;
 	}
 }
 
 // -----------------------------------------------------
 // PROCESSAR UM RAY (COLUNA)
 // -----------------------------------------------------
-static void	cast_ray(t_game *g, int x)
+void	cast_ray(t_game *g, int x)
 {
-	double	rayDirX;
-	double	rayDirY;
-	int		mapX;
-	int		mapY;
-	int		stepX;
-	int		stepY;
-	double	sideDistX;
-	double	sideDistY;
-	int		side;
-	int		lineHeight;
-	int		drawStart;
-	int		drawEnd;
-	int		texNum;
-	int		texX;
-	double	perpWallDist;
+	t_ray	ray;
+	t_wall	wall;
 
-	init_ray(g, x, &rayDirX, &rayDirY, &mapX, &mapY);
-	calculate_step_and_sidedist(g, rayDirX, rayDirY, &stepX, &stepY,
-		&sideDistX, &sideDistY, mapX, mapY);
-	perform_dda(g, &mapX, &mapY, &sideDistX, &sideDistY, stepX, stepY,
-		&side, rayDirX, rayDirY);
-	calculate_wall_height(g, mapX, mapY, side, rayDirX, rayDirY, stepX,
-		stepY, &lineHeight, &drawStart, &drawEnd);
-	texNum = select_texture(side, rayDirX, rayDirY);
-	if (side == 0)
-		perpWallDist = (mapX - g->posX + (1 - stepX) / 2) / rayDirX;
-	else
-		perpWallDist = (mapY - g->posY + (1 - stepY) / 2) / rayDirY;
-	texX = calculate_tex_x(g, side, perpWallDist, rayDirX, rayDirY, texNum);
-	draw_textured_column(g, x, drawStart, drawEnd, lineHeight, texNum, texX);
+	init_ray_struct(g, x, &ray);
+	calc_ray_step(g, &ray);
+	perform_dda_ray(g, &ray);
+	calc_wall(g, &ray, &wall);
+	draw_textured_column(g, x, &wall);
 }
 
 // -----------------------------------------------------
