@@ -1,7 +1,7 @@
 NAME	:= cub3D
 CC		:= cc
 FLAGS	:= -Wall -Wextra -Werror -g
-LIBS	:= -lmlx -lXext -lX11 -lm
+LIBS	:= -lXext -lX11 -lm
 
 # Library Paths - No Spaces Around '='
 LIBFT_DIR	:= libft
@@ -9,7 +9,19 @@ MLX_DIR		:= minilibx-linux
 
 # Source Files
 
-SRCS := main.c launcher.c draw.c draw_utils.c draw_texture.c player.c input.c
+SRCS := main.c \
+		launcher.c \
+		draw.c \
+		draw_utils.c \
+		draw_texture.c \
+		player.c \
+		player_utils.c \
+		input.c \
+		arg_check.c \
+		free_functions.c \
+		init.c \
+		parse_cub.c \
+		parse_cub_utils.c
 
 OBJS := $(SRCS:.c=.o)
 

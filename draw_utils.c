@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   draw_utils.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: diogribe <diogribe@student.42porto.com>    +#+  +:+       +#+        */
+/*   By: nayara <nayara@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/04 20:45:00 by diogribe          #+#    #+#             */
-/*   Updated: 2025/11/04 22:54:10 by diogribe         ###   ########.fr       */
+/*   Updated: 2026/01/16 16:54:47 by nayara           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,11 +28,11 @@ void	my_mlx_pixel_put(t_game *game, int x, int y, int color)
 // -----------------------------------------------------
 // OBTER COR PARA LINHA
 // -----------------------------------------------------
-static int	get_line_color(int y)
+static int	get_line_color(t_game *g, int y)
 {
-	if (y < HEIGHT / 2)
-		return (0x87CEEB);
-	return (0x444444);
+	if (y < HEIGHT / 2) // se a linha estiver na metade superior do ecra, pinta com a cor do teto
+		return (g->ceiling_color);
+	return (g->floor_color); // senao pinta com a cor do chao
 }
 
 // -----------------------------------------------------
@@ -47,7 +47,7 @@ void	clear_screen(t_game *g)
 	y = 0;
 	while (y < HEIGHT)
 	{
-		color = get_line_color(y);
+		color = get_line_color(g, y);
 		x = 0;
 		while (x < WIDTH)
 		{

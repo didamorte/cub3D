@@ -3,16 +3,16 @@
 /*                                                        :::      ::::::::   */
 /*   get_next_line_utils.c                              :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: diogribe <diogribe@student.42porto.com>    +#+  +:+       +#+        */
+/*   By: nayara <nayara@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/06 22:30:37 by rneto-fo          #+#    #+#             */
-/*   Updated: 2025/04/30 15:45:48 by diogribe         ###   ########.fr       */
+/*   Updated: 2026/01/19 17:13:32 by nayara           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "get_next_line.h"
 
-char	*ft_strchr(const char *str, int c)
+char	*gnl_ft_strchr(const char *str, int c)
 {
 	int	i;
 
@@ -84,11 +84,11 @@ char	*gnl_ft_substr(char const *s, unsigned int start, size_t len)
 	sub = malloc((len + 1) * sizeof(char));
 	if (!sub)
 		return (NULL);
-	ft_strlcpy (sub, s + start, len + 1);
+	gnl_ft_strlcpy (sub, s + start, len + 1);
 	return (sub);
 }
 
-size_t	ft_strlcpy(char *dst, const char *src, size_t n)
+size_t	gnl_ft_strlcpy(char *dst, const char *src, size_t n)
 {
 	size_t	i;
 	size_t	src_lenght;

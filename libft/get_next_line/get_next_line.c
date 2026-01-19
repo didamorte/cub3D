@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   get_next_line.c                                    :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: diogribe <diogribe@student.42porto.com>    +#+  +:+       +#+        */
+/*   By: nayara <nayara@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/06 22:30:55 by rneto-fo          #+#    #+#             */
-/*   Updated: 2025/05/18 12:35:04 by diogribe         ###   ########.fr       */
+/*   Updated: 2026/01/19 16:54:11 by nayara           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,7 +22,7 @@ static char	*fish_text(int fd, char *buf)
 	if (!str)
 		return (NULL);
 	read_chars = 1;
-	while (!(ft_strchr(buf, '\n')) && read_chars != 0)
+	while (!(gnl_ft_strchr(buf, '\n')) && read_chars != 0)
 	{
 		read_chars = read(fd, str, BUFFER_SIZE);
 		if (read_chars == -1)

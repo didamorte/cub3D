@@ -1,34 +1,31 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   arg_check.c                                        :+:      :+:    :+:   */
+/*   init.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: nayara <nayara@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2025/10/09 18:04:34 by nayara            #+#    #+#             */
-/*   Updated: 2025/10/09 18:18:25 by nayara           ###   ########.fr       */
+/*   Created: 2026/01/17 17:50:47 by nayara            #+#    #+#             */
+/*   Updated: 2026/01/19 16:49:03 by nayara           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "cube.h"
+#include "cub3D.h"
 
-static int	check_ext(const char *str)
+void	init_structs(t_game *g)
 {
-	char	*ext;
+	int	i;
 
-	ext = ".cub";
-	if (ft_strncmp(str + ft_strlen(str) - 4, ext, 4) != 0)
-		return (0);
-	return (1);
-}
-
-int	arg_check(int ac, char **av)
-{
-	if (ac < 2)
-		return (ft_printf("Wrong number of arguments"), 0);
-	if (ac > 2)
-		return (ft_printf("Wrong number of arguments"), 0);
-	if (!check_ext(av[1]))
-		return (ft_printf("Error"), 0);
-	return (1);
+	// zera TUDO primeiro para evitar lixo de memória e erros de syscall
+	ft_memset(g, 0, sizeof(t_game));
+	// def valores especificos que não podem ser 0
+	g->floor_color = -1;
+	g->ceiling_color = -1;
+	i = 0;
+	while (i < 4)
+	{
+		g->tex_path[i] = NULL;
+		i++;
+	}
+// o resto já foi zerado pelo memset (ponteiros a NULL e ints/doubles a 0)
 }
