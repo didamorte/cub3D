@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   player.c                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: diogribe <diogribe@student.42porto.com>    +#+  +:+       +#+        */
+/*   By: nayara <nayara@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/04 22:20:00 by diogribe          #+#    #+#             */
-/*   Updated: 2025/11/04 22:34:55 by diogribe         ###   ########.fr       */
+/*   Updated: 2026/01/20 13:41:35 by nayara           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -71,8 +71,8 @@ void	find_player_start(t_game *g)
 		}
 		y++;
 	}
-	fprintf(stderr, "Erro: posição inicial do jogador não encontrada!\n");
-	exit(1);
+	printf("Erro: posição inicial do jogador não encontrada!\n");
+	close_game(g);
 }
 
 // -----------------------------------------------------
@@ -80,27 +80,8 @@ void	find_player_start(t_game *g)
 // -----------------------------------------------------
 void	handle_player_move(t_game *g)
 {
-	double	new_x;
-	double	new_y;
-
-	if (g->key_w)
-	{
-		new_x = g->posX + g->dirX * MOVE_SPEED;
-		new_y = g->posY + g->dirY * MOVE_SPEED;
-		if (g->map[(int)g->posY][(int)new_x] == '0')
-			g->posX = new_x;
-		if (g->map[(int)new_y][(int)g->posX] == '0')
-			g->posY = new_y;
-	}
-	if (g->key_s)
-	{
-		new_x = g->posX - g->dirX * MOVE_SPEED;
-		new_y = g->posY - g->dirY * MOVE_SPEED;
-		if (g->map[(int)g->posY][(int)new_x] == '0')
-			g->posX = new_x;
-		if (g->map[(int)new_y][(int)g->posX] == '0')
-			g->posY = new_y;
-	}
+	move_ws(g);
+	move_ad(g);
 }
 
 // -----------------------------------------------------
@@ -112,9 +93,9 @@ void	handle_player_rotate(t_game *g)
 	double	old_plane_x;
 	double	angle;
 
-	if (g->key_a)
+	if (g->key_left)
 		angle = -ROT_SPEED;
-	else if (g->key_d)
+	else if (g->key_right)
 		angle = ROT_SPEED;
 	else
 		return ;

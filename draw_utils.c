@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   draw_utils.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: diogribe <diogribe@student.42porto.com>    +#+  +:+       +#+        */
+/*   By: nayara <nayara@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/04 20:45:00 by diogribe          #+#    #+#             */
-/*   Updated: 2025/11/04 22:54:10 by diogribe         ###   ########.fr       */
+/*   Updated: 2026/01/20 13:42:56 by nayara           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,11 +28,11 @@ void	my_mlx_pixel_put(t_game *game, int x, int y, int color)
 // -----------------------------------------------------
 // OBTER COR PARA LINHA
 // -----------------------------------------------------
-static int	get_line_color(int y)
+static int	get_line_color(t_game *g, int y)
 {
 	if (y < HEIGHT / 2)
-		return (0x87CEEB);
-	return (0x444444);
+		return (g->ceiling_color);
+	return (g->floor_color);
 }
 
 // -----------------------------------------------------
@@ -47,7 +47,7 @@ void	clear_screen(t_game *g)
 	y = 0;
 	while (y < HEIGHT)
 	{
-		color = get_line_color(y);
+		color = get_line_color(g, y);
 		x = 0;
 		while (x < WIDTH)
 		{
@@ -78,7 +78,8 @@ int	get_texture_color(t_game *g, t_wall *w, int tex_y)
 void	init_tex_draw(t_tex_draw *td, t_wall *w, int tex_height)
 {
 	td->step = 1.0 * tex_height / w->line_height;
-	td->tex_pos = (w->draw_start - HEIGHT / 2 + w->line_height / 2) * td->step;
+	td->tex_pos = (w->draw_start - HEIGHT / 2 + w->line_height / 2)
+		* td->step;
 	if (w->draw_start < 0)
 	{
 		td->tex_pos += td->step * (-w->draw_start);

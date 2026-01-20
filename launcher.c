@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   launcher.c                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: diogribe <diogribe@student.42porto.com>    +#+  +:+       +#+        */
+/*   By: nayara <nayara@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/04 23:00:00 by diogribe          #+#    #+#             */
-/*   Updated: 2025/11/04 23:04:57 by diogribe         ###   ########.fr       */
+/*   Updated: 2026/01/17 18:15:42 by nayara           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -44,8 +44,8 @@ void	load_texture(t_game *g, int index, char *path)
 			&g->textures[index].width, &g->textures[index].height);
 	if (!g->textures[index].img)
 	{
-		fprintf(stderr, "Erro: não foi possível carregar %s\n", path);
-		exit(1);
+		printf("Erro: não foi possível carregar %s\n", path);
+		close_game(g);
 	}
 	g->textures[index].addr = mlx_get_data_addr(g->textures[index].img,
 			&g->textures[index].bpp, &g->textures[index].line_length,
@@ -54,10 +54,10 @@ void	load_texture(t_game *g, int index, char *path)
 
 void	create_textures(t_game *g)
 {
-	load_texture(g, 0, "textures/east.xpm");
-	load_texture(g, 1, "textures/west.xpm");
-	load_texture(g, 2, "textures/south.xpm");
-	load_texture(g, 3, "textures/north.xpm");
+	load_texture(g, NO, g->tex_path[NO]);
+	load_texture(g, SO, g->tex_path[SO]);
+	load_texture(g, WE, g->tex_path[WE]);
+	load_texture(g, EA, g->tex_path[EA]);
 }
 
 // -----------------------------------------------------

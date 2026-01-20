@@ -1,17 +1,28 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   cube.h                                             :+:      :+:    :+:   */
+/*   init.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: nayara <nayara@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2025/10/09 18:12:33 by nayara            #+#    #+#             */
-/*   Updated: 2025/10/09 18:19:38 by nayara           ###   ########.fr       */
+/*   Created: 2026/01/17 17:50:47 by nayara            #+#    #+#             */
+/*   Updated: 2026/01/20 13:40:17 by nayara           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-# include "../libft/libft.h"
-# include "../minilibx-linux/mlx.h"
+#include "cub3D.h"
 
-// SRC
-int	arg_check(int ac, char **av);
+void	init_structs(t_game *g)
+{
+	int	i;
+
+	ft_memset(g, 0, sizeof(t_game));
+	g->floor_color = -1;
+	g->ceiling_color = -1;
+	i = 0;
+	while (i < 4)
+	{
+		g->tex_path[i] = NULL;
+		i++;
+	}
+}
