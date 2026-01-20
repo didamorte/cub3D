@@ -6,7 +6,7 @@
 /*   By: nayara <nayara@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/04 20:45:00 by diogribe          #+#    #+#             */
-/*   Updated: 2026/01/16 16:54:47 by nayara           ###   ########.fr       */
+/*   Updated: 2026/01/20 13:42:56 by nayara           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,9 +30,9 @@ void	my_mlx_pixel_put(t_game *game, int x, int y, int color)
 // -----------------------------------------------------
 static int	get_line_color(t_game *g, int y)
 {
-	if (y < HEIGHT / 2) // se a linha estiver na metade superior do ecra, pinta com a cor do teto
+	if (y < HEIGHT / 2)
 		return (g->ceiling_color);
-	return (g->floor_color); // senao pinta com a cor do chao
+	return (g->floor_color);
 }
 
 // -----------------------------------------------------
@@ -78,7 +78,8 @@ int	get_texture_color(t_game *g, t_wall *w, int tex_y)
 void	init_tex_draw(t_tex_draw *td, t_wall *w, int tex_height)
 {
 	td->step = 1.0 * tex_height / w->line_height;
-	td->tex_pos = (w->draw_start - HEIGHT / 2 + w->line_height / 2) * td->step;
+	td->tex_pos = (w->draw_start - HEIGHT / 2 + w->line_height / 2)
+		* td->step;
 	if (w->draw_start < 0)
 	{
 		td->tex_pos += td->step * (-w->draw_start);

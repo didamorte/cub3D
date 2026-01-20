@@ -6,7 +6,7 @@
 /*   By: nayara <nayara@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/04 22:38:06 by diogribe          #+#    #+#             */
-/*   Updated: 2026/01/17 18:20:16 by nayara           ###   ########.fr       */
+/*   Updated: 2026/01/20 12:49:20 by nayara           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,90 +27,81 @@
 
 typedef enum e_type
 {
-	NO,	/* 0 - Textura Norte */
-	SO,	/* 1 - Textura Sul */
-	WE,	/* 2 - Textura Oeste */
-	EA,	/* 3 - Textura Leste */
-	FLOOR,	/* 4 - Cor do Chão (F) */
-	CEILING	/* 5 - Cor do Teto (C) */
+	NO,
+	SO,
+	WE,
+	EA,
+	FLOOR,
+	CEILING
 }	t_type;
 
 typedef struct s_texture
 {
-	void	*img; // ponteiro para a imagem carregada mlx_xpm_file_to_image
-	char	*addr; // variaveis fundamentais para manipulação de imgs para minilibx
-	int		bpp; // permitem ao código ler a cor de cada pixel da textura
+	void	*img;
+	char	*addr;
+	int		bpp;
 	int		line_length;
 	int		endian;
-	int		width; //O tamanho da imagem (ex: 64x64 pixels)
-	int		height; // O código usa isto para saber como esticar a imagem na parede
+	int		width;
+	int		height;
 }	t_texture;
 
 typedef struct s_ray
 {
-	double	dir_x; // A direção de um laser específico que está a ser disparado
-	double	dir_y; // " "
-	int		map_x; // Em que quadrado da grelha do mapa o laser está no momento
-	int		map_y; // " "
-	int		step_x; // ndica se o laser se move para a esquerda/direita ou cima/baixo (-1 ou 1)
-	int		step_y; // " "
-	double	side_dist_x; // A distância que o laser já percorreu até atingir a próxima linha da grelha
-	double	side_dist_y; // 
-	int		side; // Diz se o laser bateu numa parede vertical (Norte/Sul) ou horizontal (Este/Oeste)
-	double	perp_wall_dist; // A distância real e perpendicular entre o jogador e a parede. 
-						// É usada para calcular a altura da parede no ecrã sem o efeito de "olho de peixe"
+	double	dir_x;
+	double	dir_y;
+	int		map_x;
+	int		map_y;
+	int		step_x;
+	int		step_y;
+	double	side_dist_x;
+	double	side_dist_y;
+	int		side;
+	double	perp_wall_dist;
 }	t_ray;
 
 typedef struct s_wall
 {
-	int		line_height; //  Quantos pixels de altura a parede terá no ecrã (quanto mais perto, maior)
-	int		draw_start; // Onde começa (topo) e termina (base) o desenho da parede na coluna vertical da janela
-	int		draw_end; // " "
-	int		tex_num; // Qual das 4 texturas será usada para esta parede específica
-	int		tex_x; // Qual coluna horizontal da textura deve ser desenhada (para que a imagem não fique apenas de uma cor)
+	int		line_height;
+	int		draw_start;
+	int		draw_end;
+	int		tex_num;
+	int		tex_x;
 }	t_wall;
 
 typedef struct s_tex_draw
 {
-	double	step; // Quanto devemos saltar na textura para cada pixel desenhado no ecrã (ajusta a escala da imagem)
-	double	tex_pos; // A posição atual dentro da textura, em formato decimal
-	int		tex_y; // A coordenada inteira do pixel na textura que vamos copiar
-	int		color; // A cor final do pixel extraída da textura para ser colocada no buffer
+	double	step;
+	double	tex_pos;
+	int		tex_y;
+	int		color;
 }	t_tex_draw;
 
 typedef struct s_game
 {
-	void		*mlx; // ponteiro para minilibs
-	void		*win; // ponteiro para a janela aberta
-
-	/* dados tecnicos de manipulaçao de img pela minilibx */
+	void		*mlx;
+	void		*win;
 	void		*img; 
 	char		*addr;
 	int			bpp;
 	int			line_length;
 	int			endian;
-
-	char		**map; // matriz char que guardará o layout do mapa lido pelo parser
-	int			mapWidth; // largura do mapa 
-	int			mapHeight; // altura do mapa
-
-	double		posX, posY; // posição exata do jogador no mapa
-	double		dirX, dirY; // vetor q idica para onde o jogador esta a olhar diretamente
-	double		planeX, planeY; // plano da 'camera' q define o campo de visao do player
-
-	int			key_w; // flags que dizem se a tecla esta permitida (1) ou nao (0)
+	char		**map;
+	int			mapWidth;
+	int			mapHeight;
+	double		posX, posY;
+	double		dirX, dirY;
+	double		planeX, planeY;
+	int			key_w;
 	int			key_a;
 	int			key_s;
 	int			key_d;
 	int			key_left;
 	int			key_right;
-
-	/* Novas variáveis para as cores do ambiente */
-	int			floor_color; /* Guarda a cor do chão (F) em hexadecimal */
-	int			ceiling_color; /* Guarda a cor do teto (C) em hexadecimal */
-
-	t_texture	textures[4]; // array q guarda as quatro texturas (norte, sul, leste e oeste)
-	char	*tex_path[4]; // guarda os caminhos para NO SO WE EA
+	int			floor_color;
+	int			ceiling_color;
+	t_texture	textures[4];
+	char	*tex_path[4];
 }	t_game;
 
 void	my_mlx_pixel_put(t_game *game, int x, int y, int color);

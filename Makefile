@@ -21,7 +21,8 @@ SRCS := main.c \
 		free_functions.c \
 		init.c \
 		parse_cub.c \
-		parse_cub_utils.c
+		parse_cub_utils.c \
+		parse_line.c
 
 OBJS := $(SRCS:.c=.o)
 

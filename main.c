@@ -6,7 +6,7 @@
 /*   By: nayara <nayara@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/04 23:00:00 by diogribe          #+#    #+#             */
-/*   Updated: 2026/01/19 16:50:04 by nayara           ###   ########.fr       */
+/*   Updated: 2026/01/20 12:50:10 by nayara           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,8 +18,8 @@ int	main(int ac, char **av)
 
 	if (!arg_check(ac, av))
 		return (1);
-	init_structs(&g); // inicializa cores com -1 e ponteiros com null
-	if (!parse_cub_file((&g), av[1])) // preenche texturas, cores e mapas
+	init_structs(&g);
+	if (!parse_cub_file((&g), av[1]))
 		return (1);
 	find_player_start(&g);
 	g.mlx = mlx_init();

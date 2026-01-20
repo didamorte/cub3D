@@ -1,11 +1,18 @@
-WE      ./sprites/wall.xpm
-F         125,200,100
-SO      ./sprites/south_wall.xpm
+EA ./textures/east.xpm
+SO ./textures/south.xpm
 
-EA                   ./sprites/east_wall.xpm
+NO ./textures/north.xpm
+F 225,255,255
+C 0,0,0
+
+WE           ./textures/west.xpm
+F         125,200,100
+SO           ./textures/south.xpm
+
+EA                 ./textures/east.xpm
 C              140,130,100
 
-NO          ./sprites/north_wall.xpm
+NO            ./textures/north.xpm
 R 123 123
 
 1111111111

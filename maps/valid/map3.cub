@@ -1,9 +1,9 @@
-NO ./sprites/wall1.xpm
-SO  ./sprites/wall2.xpm
+EA ./textures/east.xpm
+SO ./textures/south.xpm
 C    225,30,0
-EA  ./sprites/wall5.xpm
+WE ./textures/west.xpm
 F    220,100,0
-WE  ./sprites/wall3.xpm
+NO ./textures/north.xpm
 
          1111111111111111111111111
          1000000000110000000000001
