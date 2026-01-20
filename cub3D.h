@@ -6,7 +6,7 @@
 /*   By: nayara <nayara@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/04 22:38:06 by diogribe          #+#    #+#             */
-/*   Updated: 2026/01/20 12:49:20 by nayara           ###   ########.fr       */
+/*   Updated: 2026/01/20 16:16:26 by nayara           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -152,5 +152,6 @@ int	is_empty_line(char *line);
 int	process_line(t_game *g, char *line);
 int	close_game(t_game *g);
 void	init_structs(t_game *g);
+void	clear_gnl(int fd);
 
 #endif

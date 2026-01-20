@@ -6,11 +6,23 @@
 /*   By: nayara <nayara@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/01/20 13:37:27 by nayara            #+#    #+#             */
-/*   Updated: 2026/01/20 13:41:51 by nayara           ###   ########.fr       */
+/*   Updated: 2026/01/20 16:16:55 by nayara           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "cub3D.h"
+
+void	clear_gnl(int fd)
+{
+	char	*tmp;
+
+	tmp = get_next_line(fd);
+	while (tmp)
+	{
+		free(tmp);
+		tmp = get_next_line(fd);
+	}
+}
 
 int	is_empty_line(char *line)
 {

@@ -6,7 +6,7 @@
 /*   By: nayara <nayara@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/01/06 19:09:59 by nayara            #+#    #+#             */
-/*   Updated: 2026/01/20 13:49:08 by nayara           ###   ########.fr       */
+/*   Updated: 2026/01/20 16:20:50 by nayara           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,17 +28,19 @@ int	parse_identifiers(t_game *g, int fd)
 			free(line);
 			continue ;
 		}
-		if (process_line(g, line))
-			found_elements++;
-		else
+		if (!process_line(g, line))
 		{
 			free(line);
+			clear_gnl(fd);
+			free_textures_paths(g);
 			return (printf("Error\nInvalid configuration element\n"), 0);
 		}
+		found_elements++;
 		free(line);
 	}
 	return (found_elements == 6);
 }
+
 
 int	check_map_chars(t_game *g)
 {

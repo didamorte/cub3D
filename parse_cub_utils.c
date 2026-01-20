@@ -6,7 +6,7 @@
 /*   By: nayara <nayara@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/01/06 20:15:04 by nayara            #+#    #+#             */
-/*   Updated: 2026/01/20 13:47:00 by nayara           ###   ########.fr       */
+/*   Updated: 2026/01/20 16:19:13 by nayara           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,7 +36,7 @@ int	save_color(t_game *g, t_type type, char *line)
 
 	line = trim_crlf(line);
 	rgb = ft_split(line, ',');
-	if (!rgb || !rgb[0] || !rgb[1] || !rgb[2])
+	if (!rgb || !rgb[0] || !rgb[1] || !rgb[2] || rgb[3])
 	{
 		free_matrix(rgb);
 		return (printf("Error\nInvalid color format\n"), 0);
@@ -57,25 +57,27 @@ int	save_color(t_game *g, t_type type, char *line)
 
 int	save_texture(t_game *g, int index, char *line)
 {
-	int	i;
+	int	start;
+	int	end;
 
-	i = 0;
-	while (line[i] && (line[i] == ' ' || line[i] == '\t'))
-		i++;
-	g->tex_path[index] = ft_strdup(line + i);
+	start = 0;
+	while (line[start] == ' ' || line[start] == '\t')
+		start++;
+	end = start;
+	while (line[end] && line[end] != ' ' && line[end] != '\t'
+		&& line[end] != '\n' && line[end] != '\r')
+		end++;
+	g->tex_path[index] = ft_substr(line, start, end - start);
 	if (!g->tex_path[index])
 		return (0);
-	i = 0;
-	while (g->tex_path[index][i])
+	while (line[end] == ' ' || line[end] == '\t')
+		end++;
+	if (line[end] != '\0' && line[end] != '\n')
 	{
-		if (g->tex_path[index][i] == '\n' || g->tex_path[index][i] == ' '
-			|| g->tex_path[index][i] == '\t' || g->tex_path[index][i] == '\r')
-		{
-			g->tex_path[index][i] = '\0';
-			break ;
-		}
-		i++;
+		free(g->tex_path[index]);
+		g->tex_path[index] = NULL;
+		printf("Error\nInvalid texture format\n");
+		return (0);
 	}
-	g->tex_path[index][i] = '\0';
 	return (1);
 }

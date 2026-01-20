@@ -1,10 +1,10 @@
-11111111111110
-1PCCCC0000N001
-11111111111110
+11111111111111
+1N000000000001
+11111111111111
 
-EA ./sprites/east_wall.xpm
+NO ./textures/north.xpm
+SO ./textures/south.xpm
+WE ./textures/west.xpm
+EA ./textures/east.xpm
 C 140,130,100
-SO ./sprites/south_wall.xpm
-WE ./sprites/wall.xpm
 F 125,200,100
-NO ./sprites/north_wall.xpm

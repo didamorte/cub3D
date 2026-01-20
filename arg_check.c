@@ -6,7 +6,7 @@
 /*   By: nayara <nayara@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/10/09 18:04:34 by nayara            #+#    #+#             */
-/*   Updated: 2026/01/20 13:39:19 by nayara           ###   ########.fr       */
+/*   Updated: 2026/01/20 15:26:52 by nayara           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,10 +25,10 @@ static int	check_ext(const char *str)
 int	arg_check(int ac, char **av)
 {
 	if (ac < 2)
-		return (ft_printf("Wrong number of arguments"), 0);
+		return (ft_printf("Error\nWrong number of arguments\n"), 0);
 	if (ac > 2)
-		return (ft_printf("Wrong number of arguments"), 0);
+		return (ft_printf("Error\nWrong number of arguments\n"), 0);
 	if (!check_ext(av[1]))
-		return (ft_printf("Error"), 0);
+		return (ft_printf("Error\nWrong file extension\n"), 0);
 	return (1);
 }
