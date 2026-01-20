@@ -20,14 +20,14 @@ int	select_texture(int side, double rayDirX, double rayDirY)
 	int	tex_num;
 
 	tex_num = 0;
-	if (side == 0 && rayDirX > 0)
-		tex_num = 1;
-	else if (side == 0 && rayDirX < 0)
+	if (side == 1 && rayDirY > 0)
 		tex_num = 0;
-	else if (side == 1 && rayDirY > 0)
-		tex_num = 3;
 	else if (side == 1 && rayDirY < 0)
+		tex_num = 1;
+	else if (side == 0 && rayDirX > 0)
 		tex_num = 2;
+	else if (side == 0 && rayDirX < 0)
+		tex_num = 3;
 	return (tex_num);
 }
 

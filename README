@@ -1,4 +1,20 @@
-Este projeto é inspirado no jogo mundialmente famoso Wolfenstein 3D,
-que é considerado o primeiro FPS já criado. Ele permite que você explore ray-casting.
-Seu objetivo será fazer uma visão dinâmica dentro de um labirinto, onde você precisa
-encontrar seu caminho
+This project has been created as part of the 42 curriculum by diogribe, nogioni-.
+
+This project is inspired by the world-famous game Wolfenstein 3D, which is considered the first FPS ever created.
+It allowed us to explore ray-casting.
+
+Our goal was to create a dynamic view within a maze, where you need to find your way around.
+
+Compile:
+make
+./cub3D "map file .cub"
+
+Movement:
+W and S to walk
+A and D to strafe
+left and right arrow to spin/look around
+
+Resources and Tools:
+[Raycasting Explained](https://lodev.org/cgtutor/raycasting.html)
+[Minilibx Linux](https://github.com/42paris/minilibx-linux)
+AI for general questions.

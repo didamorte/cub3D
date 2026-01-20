@@ -27,14 +27,36 @@ static char	*trim_crlf(char *s)
 	return (s);
 }
 
+static int	is_valid_rgb_format(char *line)
+{
+	int	i;
+	int	commas;
+
+	i = 0;
+	commas = 0;
+	while (line[i])
+	{
+		if (line[i] == ',')
+			commas++;
+		else if (!ft_isdigit(line[i]) && !ft_isspace(line[i]))
+			return (0);
+		i++;
+	}
+	if (commas != 2)
+		return (0);
+	return (1);
+}
+
 int	save_color(t_game *g, t_type type, char *line)
 {
 	char	**rgb;
 	int		red;
-	int		green;
-	int		blue;
+	int		gren;
+	int		blu;
 
 	line = trim_crlf(line);
+	if (!is_valid_rgb_format(line))
+		return (printf("Error\nInvalid color format\n"), 0);
 	rgb = ft_split(line, ',');
 	if (!rgb || !rgb[0] || !rgb[1] || !rgb[2] || rgb[3])
 	{
@@ -42,16 +64,15 @@ int	save_color(t_game *g, t_type type, char *line)
 		return (printf("Error\nInvalid color format\n"), 0);
 	}
 	red = ft_atoi(rgb[0]);
-	green = ft_atoi(rgb[1]);
-	blue = ft_atoi(rgb[2]);
+	gren = ft_atoi(rgb[1]);
+	blu = ft_atoi(rgb[2]);
 	free_matrix(rgb);
-	if (red < 0 || red > 255 || green < 0 || green > 255
-		|| blue < 0 || blue > 255)
+	if (red < 0 || red > 255 || gren < 0 || gren > 255 || blu < 0 || blu > 255)
 		return (printf("Error\nColor values must be between 0 and 255\n"), 0);
 	if (type == FLOOR)
-		g->floor_color = rgb_to_int(red, green, blue);
+		g->floor_color = rgb_to_int(red, gren, blu);
 	else if (type == CEILING)
-		g->ceiling_color = rgb_to_int(red, green, blue);
+		g->ceiling_color = rgb_to_int(red, gren, blu);
 	return (1);
 }
 
