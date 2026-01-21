@@ -6,7 +6,7 @@
 /*   By: nayara <nayara@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/01/20 13:37:27 by nayara            #+#    #+#             */
-/*   Updated: 2026/01/20 16:16:55 by nayara           ###   ########.fr       */
+/*   Updated: 2026/01/21 12:52:58 by nayara           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,7 +31,8 @@ int	is_empty_line(char *line)
 	i = 0;
 	while (line[i] != '\0')
 	{
-		if (line[i] != ' ' && line[i] != '\t' && line[i] != '\n')
+		if (line[i] != ' ' && line[i] != '\t'
+			&& line[i] != '\n' && line[i] != '\r')
 			return (0);
 		i++;
 	}
@@ -40,17 +41,27 @@ int	is_empty_line(char *line)
 
 int	process_line(t_game *g, char *line)
 {
-	if (!ft_strncmp(line, "NO ", 3) && !g->textures[NO].img)
-		return (save_texture(g, NO, line + 3));
-	if (!ft_strncmp(line, "SO ", 3) && !g->textures[SO].img)
-		return (save_texture(g, SO, line + 3));
-	if (!ft_strncmp(line, "WE ", 3) && !g->textures[WE].img)
-		return (save_texture(g, WE, line + 3));
-	if (!ft_strncmp(line, "EA ", 3) && !g->textures[EA].img)
-		return (save_texture(g, EA, line + 3));
-	if (!ft_strncmp(line, "F ", 2) && g->floor_color == -1)
-		return (save_color(g, FLOOR, line + 2));
-	if (!ft_strncmp(line, "C ", 2) && g->ceiling_color == -1)
-		return (save_color(g, CEILING, line + 2));
-	return (0);
+	char	*trimmed;
+	int		res;
+
+	res = 0;
+	trimmed = ft_strtrim(line, " \t\n\r");
+	if (!trimmed || !*trimmed)
+		return (free(trimmed), 1);
+	if (!ft_strncmp(trimmed, "NO ", 3))
+		res = save_texture(g, NO, trimmed);
+	else if (!ft_strncmp(trimmed, "SO ", 3))
+		res = save_texture(g, SO, trimmed);
+	else if (!ft_strncmp(trimmed, "WE ", 3))
+		res = save_texture(g, WE, trimmed);
+	else if (!ft_strncmp(trimmed, "EA ", 3))
+		res = save_texture(g, EA, trimmed);
+	else if (!ft_strncmp(trimmed, "F ", 2))
+		res = save_color(g, FLOOR, trimmed);
+	else if (!ft_strncmp(trimmed, "C ", 2))
+		res = save_color(g, CEILING, trimmed);
+	else
+		res = -1;
+	free(trimmed);
+	return (res);
 }

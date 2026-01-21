@@ -20,9 +20,13 @@ SRCS := main.c \
 		arg_check.c \
 		free_functions.c \
 		init.c \
-		parse_cub.c \
-		parse_cub_utils.c \
-		parse_line.c
+		parse_id.c \
+		parse_line.c \
+		parse_map.c \
+		parse_utils.c \
+		map_check.c \
+		map_check_utils.c \
+		free_utils.c
 
 OBJS := $(SRCS:.c=.o)
 

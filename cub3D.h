@@ -6,7 +6,7 @@
 /*   By: nayara <nayara@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/04 22:38:06 by diogribe          #+#    #+#             */
-/*   Updated: 2026/01/20 16:16:26 by nayara           ###   ########.fr       */
+/*   Updated: 2026/01/21 12:04:16 by nayara           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -102,6 +102,7 @@ typedef struct s_game
 	int			ceiling_color;
 	t_texture	textures[4];
 	char	*tex_path[4];
+	char	*map_line;
 }	t_game;
 
 void	my_mlx_pixel_put(t_game *game, int x, int y, int color);
@@ -143,7 +144,7 @@ void	free_textures_paths(t_game *g);
 int	parse_identifiers(t_game *g, int fd);
 int	check_map_chars(t_game *g);
 int	is_map_closed(t_game *g);
-char	*read_map_to_string(int fd);
+char	*read_map_to_string(t_game *g, int fd);
 int	parse_cub_file(t_game *g, char *file_path);
 void	free_matrix(char **matrix);
 int	save_color(t_game *g, t_type type, char *line);
@@ -153,5 +154,6 @@ int	process_line(t_game *g, char *line);
 int	close_game(t_game *g);
 void	init_structs(t_game *g);
 void	clear_gnl(int fd);
+void	drain_gnl(int fd);
 
 #endif

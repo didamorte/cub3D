@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   draw_texture.c                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: diogribe <diogribe@student.42porto.com>    +#+  +:+       +#+        */
+/*   By: nayara <nayara@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/04 20:45:00 by diogribe          #+#    #+#             */
-/*   Updated: 2025/11/04 22:51:09 by diogribe         ###   ########.fr       */
+/*   Updated: 2026/01/21 10:38:09 by nayara           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,14 +20,14 @@ int	select_texture(int side, double rayDirX, double rayDirY)
 	int	tex_num;
 
 	tex_num = 0;
-	if (side == 0 && rayDirX > 0)
-		tex_num = 1;
-	else if (side == 0 && rayDirX < 0)
+	if (side == 1 && rayDirY > 0)
 		tex_num = 0;
-	else if (side == 1 && rayDirY > 0)
-		tex_num = 3;
 	else if (side == 1 && rayDirY < 0)
+		tex_num = 1;
+	else if (side == 0 && rayDirX > 0)
 		tex_num = 2;
+	else if (side == 0 && rayDirX < 0)
+		tex_num = 3;
 	return (tex_num);
 }
 
