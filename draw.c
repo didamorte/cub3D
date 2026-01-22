@@ -6,7 +6,7 @@
 /*   By: diogribe <diogribe@student.42porto.com>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/10/13 18:41:13 by diogribe          #+#    #+#             */
-/*   Updated: 2025/11/04 21:54:28 by diogribe         ###   ########.fr       */
+/*   Updated: 2026/01/22 00:41:52 by diogribe         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,10 +20,10 @@ void	init_ray_struct(t_game *g, int x, t_ray *ray)
 	double	camera_x;
 
 	camera_x = 2 * x / (double)WIDTH - 1;
-	ray->dir_x = g->dirX + g->planeX * camera_x;
-	ray->dir_y = g->dirY + g->planeY * camera_x;
-	ray->map_x = (int)g->posX;
-	ray->map_y = (int)g->posY;
+	ray->dir_x = g->dir_x + g->plane_x * camera_x;
+	ray->dir_y = g->dir_y + g->plane_y * camera_x;
+	ray->map_x = (int)g->pos_x;
+	ray->map_y = (int)g->pos_y;
 }
 
 // -----------------------------------------------------
@@ -39,22 +39,22 @@ void	calc_ray_step(t_game *g, t_ray *ray)
 	if (ray->dir_x < 0)
 	{
 		ray->step_x = -1;
-		ray->side_dist_x = (g->posX - ray->map_x) * delta_x;
+		ray->side_dist_x = (g->pos_x - ray->map_x) * delta_x;
 	}
 	else
 	{
 		ray->step_x = 1;
-		ray->side_dist_x = (ray->map_x + 1.0 - g->posX) * delta_x;
+		ray->side_dist_x = (ray->map_x + 1.0 - g->pos_x) * delta_x;
 	}
 	if (ray->dir_y < 0)
 	{
 		ray->step_y = -1;
-		ray->side_dist_y = (g->posY - ray->map_y) * delta_y;
+		ray->side_dist_y = (g->pos_y - ray->map_y) * delta_y;
 	}
 	else
 	{
 		ray->step_y = 1;
-		ray->side_dist_y = (ray->map_y + 1.0 - g->posY) * delta_y;
+		ray->side_dist_y = (ray->map_y + 1.0 - g->pos_y) * delta_y;
 	}
 }
 

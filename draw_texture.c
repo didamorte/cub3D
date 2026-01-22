@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   draw_texture.c                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: nayara <nayara@student.42.fr>              +#+  +:+       +#+        */
+/*   By: diogribe <diogribe@student.42porto.com>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/04 20:45:00 by diogribe          #+#    #+#             */
-/*   Updated: 2026/01/21 10:38:09 by nayara           ###   ########.fr       */
+/*   Updated: 2026/01/22 00:41:52 by diogribe         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -40,9 +40,9 @@ int	calculate_tex_x(t_game *g, t_ray *ray, int tex_num)
 	int		tex_x;
 
 	if (ray->side == 0)
-		wall_x = g->posY + ray->perp_wall_dist * ray->dir_y;
+		wall_x = g->pos_y + ray->perp_wall_dist * ray->dir_y;
 	else
-		wall_x = g->posX + ray->perp_wall_dist * ray->dir_x;
+		wall_x = g->pos_x + ray->perp_wall_dist * ray->dir_x;
 	wall_x -= floor(wall_x);
 	tex_x = (int)(wall_x * (double)g->textures[tex_num].width);
 	if ((ray->side == 0 && ray->dir_x < 0)
@@ -85,10 +85,10 @@ void	draw_textured_column(t_game *g, int x, t_wall *w)
 void	calc_wall(t_game *g, t_ray *ray, t_wall *wall)
 {
 	if (ray->side == 0)
-		ray->perp_wall_dist = (ray->map_x - g->posX
+		ray->perp_wall_dist = (ray->map_x - g->pos_x
 				+ (1 - ray->step_x) / 2) / ray->dir_x;
 	else
-		ray->perp_wall_dist = (ray->map_y - g->posY
+		ray->perp_wall_dist = (ray->map_y - g->pos_y
 				+ (1 - ray->step_y) / 2) / ray->dir_y;
 	wall->line_height = (int)(HEIGHT / ray->perp_wall_dist);
 	wall->draw_start = -wall->line_height / 2 + HEIGHT / 2;

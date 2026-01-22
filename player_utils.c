@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   player_utils.c                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: nayara <nayara@student.42.fr>              +#+  +:+       +#+        */
+/*   By: diogribe <diogribe@student.42porto.com>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/01/17 17:36:46 by nayara            #+#    #+#             */
-/*   Updated: 2026/01/21 10:41:03 by nayara           ###   ########.fr       */
+/*   Updated: 2026/01/22 00:41:52 by diogribe         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,21 +22,21 @@ void	move_ws(t_game *g)
 
 	if (g->key_w)
 	{
-		new_x = g->posX + g->dirX * MOVE_SPEED;
-		new_y = g->posY + g->dirY * MOVE_SPEED;
-		if (g->map[(int)g->posY][(int)new_x] == '0')
-			g->posX = new_x;
-		if (g->map[(int)new_y][(int)g->posX] == '0')
-			g->posY = new_y;
+		new_x = g->pos_x + g->dir_x * MOVE_SPEED;
+		new_y = g->pos_y + g->dir_y * MOVE_SPEED;
+		if (g->map[(int)g->pos_y][(int)new_x] == '0')
+			g->pos_x = new_x;
+		if (g->map[(int)new_y][(int)g->pos_x] == '0')
+			g->pos_y = new_y;
 	}
 	if (g->key_s)
 	{
-		new_x = g->posX - g->dirX * MOVE_SPEED;
-		new_y = g->posY - g->dirY * MOVE_SPEED;
-		if (g->map[(int)g->posY][(int)new_x] == '0')
-			g->posX = new_x;
-		if (g->map[(int)new_y][(int)g->posX] == '0')
-			g->posY = new_y;
+		new_x = g->pos_x - g->dir_x * MOVE_SPEED;
+		new_y = g->pos_y - g->dir_y * MOVE_SPEED;
+		if (g->map[(int)g->pos_y][(int)new_x] == '0')
+			g->pos_x = new_x;
+		if (g->map[(int)new_y][(int)g->pos_x] == '0')
+			g->pos_y = new_y;
 	}
 }
 
@@ -47,20 +47,20 @@ void	move_ad(t_game *g)
 
 	if (g->key_a)
 	{
-		new_x = g->posX + g->dirY * MOVE_SPEED;
-		new_y = g->posY - g->dirX * MOVE_SPEED;
-		if (g->map[(int)g->posY][(int)new_x] == '0')
-			g->posX = new_x;
-		if (g->map[(int)new_y][(int)g->posX] == '0')
-			g->posY = new_y;
+		new_x = g->pos_x + g->dir_y * MOVE_SPEED;
+		new_y = g->pos_y - g->dir_x * MOVE_SPEED;
+		if (g->map[(int)g->pos_y][(int)new_x] == '0')
+			g->pos_x = new_x;
+		if (g->map[(int)new_y][(int)g->pos_x] == '0')
+			g->pos_y = new_y;
 	}
 	if (g->key_d)
 	{
-		new_x = g->posX - g->dirY * MOVE_SPEED;
-		new_y = g->posY + g->dirX * MOVE_SPEED;
-		if (g->map[(int)g->posY][(int)new_x] == '0')
-			g->posX = new_x;
-		if (g->map[(int)new_y][(int)g->posX] == '0')
-			g->posY = new_y;
+		new_x = g->pos_x - g->dir_y * MOVE_SPEED;
+		new_y = g->pos_y + g->dir_x * MOVE_SPEED;
+		if (g->map[(int)g->pos_y][(int)new_x] == '0')
+			g->pos_x = new_x;
+		if (g->map[(int)new_y][(int)g->pos_x] == '0')
+			g->pos_y = new_y;
 	}
 }
