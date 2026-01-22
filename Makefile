@@ -3,7 +3,7 @@ CC		:= cc
 FLAGS	:= -Wall -Wextra -Werror -g
 LIBS	:= -lXext -lX11 -lm
 
-# Library Paths - No Spaces Around '='
+# Library Paths
 LIBFT_DIR	:= libft
 MLX_DIR		:= minilibx-linux
 
