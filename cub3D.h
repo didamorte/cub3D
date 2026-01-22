@@ -3,15 +3,15 @@
 /*                                                        :::      ::::::::   */
 /*   cub3D.h                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: nayara <nayara@student.42.fr>              +#+  +:+       +#+        */
+/*   By: diogribe <diogribe@student.42porto.com>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/04 22:38:06 by diogribe          #+#    #+#             */
-/*   Updated: 2026/01/20 18:45:19 by nayara           ###   ########.fr       */
+/*   Updated: 2026/01/22 00:53:33 by diogribe         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#ifndef DRAW_H
-# define DRAW_H
+#ifndef CUB3D_H
+# define CUB3D_H
 
 # include "minilibx-linux/mlx.h"
 # include "libft/libft.h"
@@ -81,17 +81,20 @@ typedef struct s_game
 {
 	void		*mlx;
 	void		*win;
-	void		*img; 
+	void		*img;
 	char		*addr;
 	int			bpp;
 	int			line_length;
 	int			endian;
 	char		**map;
-	int			mapWidth;
-	int			mapHeight;
-	double		posX, posY;
-	double		dirX, dirY;
-	double		planeX, planeY;
+	int			map_width;
+	int			map_height;
+	double		pos_x;
+	double		pos_y;
+	double		dir_x;
+	double		dir_y;
+	double		plane_x;
+	double		plane_y;
 	int			key_w;
 	int			key_a;
 	int			key_s;
@@ -101,8 +104,8 @@ typedef struct s_game
 	int			floor_color;
 	int			ceiling_color;
 	t_texture	textures[4];
-	char	*tex_path[4];
-	char	*map_line;
+	char		*tex_path[4];
+	char		*map_line;
 }	t_game;
 
 void	my_mlx_pixel_put(t_game *game, int x, int y, int color);
@@ -139,20 +142,21 @@ int		key_press(int key, t_game *g);
 int		key_release(int key, t_game *g);
 void	update_movement(t_game *g);
 
-int	arg_check(int ac, char **av);
+int		arg_check(int ac, char **av);
 void	free_textures_paths(t_game *g);
-int	parse_identifiers(t_game *g, int fd);
-int	check_map_chars(t_game *g);
-int	is_map_closed(t_game *g);
+int		parse_identifiers(t_game *g, int fd);
+int		check_map_chars(t_game *g);
+int		is_map_closed(t_game *g);
 char	*read_map_to_string(t_game *g, int fd);
-int	parse_cub_file(t_game *g, char *file_path);
+int		parse_cub_file(t_game *g, char *file_path);
 void	free_matrix(char **matrix);
-int	save_color(t_game *g, t_type type, char *line);
-int	save_texture(t_game *g, int index, char *line);
-int	is_empty_line(char *line);
-int	process_line(t_game *g, char *line);
-int	close_game(t_game *g);
+int		save_color(t_game *g, t_type type, char *line);
+int		save_texture(t_game *g, int index, char *line);
+int		is_empty_line(char *line);
+int		process_line(t_game *g, char *line);
+int		close_game(t_game *g);
 void	init_structs(t_game *g);
 void	clear_gnl(int fd);
+void	drain_gnl(int fd);
 
 #endif

@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   parse_line.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: nayara <nayara@student.42.fr>              +#+  +:+       +#+        */
+/*   By: diogribe <diogribe@student.42porto.com>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/01/20 13:37:27 by nayara            #+#    #+#             */
-/*   Updated: 2026/01/20 20:15:31 by nayara           ###   ########.fr       */
+/*   Updated: 2026/01/22 01:01:09 by diogribe         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,7 +31,8 @@ int	is_empty_line(char *line)
 	i = 0;
 	while (line[i] != '\0')
 	{
-		if (line[i] != ' ' && line[i] != '\t' && line[i] != '\n' && line[i] != '\r')
+		if (line[i] != ' ' && line[i] != '\t'
+			&& line[i] != '\n' && line[i] != '\r')
 			return (0);
 		i++;
 	}
@@ -47,12 +48,18 @@ int	process_line(t_game *g, char *line)
 	trimmed = ft_strtrim(line, " \t\n\r");
 	if (!trimmed || !*trimmed)
 		return (free(trimmed), 1);
-	if (!ft_strncmp(trimmed, "NO ", 3)) res = save_texture(g, NO, trimmed);
-	else if (!ft_strncmp(trimmed, "SO ", 3)) res = save_texture(g, SO, trimmed);
-	else if (!ft_strncmp(trimmed, "WE ", 3)) res = save_texture(g, WE, trimmed);
-	else if (!ft_strncmp(trimmed, "EA ", 3)) res = save_texture(g, EA, trimmed);
-	else if (!ft_strncmp(trimmed, "F ", 2)) res = save_color(g, FLOOR, trimmed);
-	else if (!ft_strncmp(trimmed, "C ", 2)) res = save_color(g, CEILING, trimmed);
+	if (!ft_strncmp(trimmed, "NO ", 3))
+		res = save_texture(g, NO, trimmed);
+	else if (!ft_strncmp(trimmed, "SO ", 3))
+		res = save_texture(g, SO, trimmed);
+	else if (!ft_strncmp(trimmed, "WE ", 3))
+		res = save_texture(g, WE, trimmed);
+	else if (!ft_strncmp(trimmed, "EA ", 3))
+		res = save_texture(g, EA, trimmed);
+	else if (!ft_strncmp(trimmed, "F ", 2))
+		res = save_color(g, FLOOR, trimmed);
+	else if (!ft_strncmp(trimmed, "C ", 2))
+		res = save_color(g, CEILING, trimmed);
 	else
 		res = -1;
 	free(trimmed);

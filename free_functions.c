@@ -1,44 +1,16 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   free_functions.c                                   :+:      :+:    :+:   */
+/*   free_funcions.c                                    :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: nayara <nayara@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/01/06 20:58:27 by nayara            #+#    #+#             */
-/*   Updated: 2026/01/20 13:49:28 by nayara           ###   ########.fr       */
+/*   Updated: 2026/01/21 12:06:41 by nayara           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "cub3D.h"
-
-void	free_matrix(char **matrix)
-{
-	int	i;
-
-	i = 0;
-	if (!matrix)
-		return ;
-	while (matrix[i])
-	{
-		free(matrix[i]);
-		i++;
-	}
-	free(matrix);
-}
-
-void	free_textures_paths(t_game *g)
-{
-	int	i;
-
-	i = 0;
-	while (i < 4)
-	{
-		if (g->tex_path[i])
-			free(g->tex_path[i]);
-		i++;
-	}
-}
 
 static void	free_paths_and_textures(t_game *g)
 {
